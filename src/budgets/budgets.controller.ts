@@ -1,6 +1,6 @@
 import { Controller, Get, HttpStatus, Param, Res } from '@nestjs/common';
-import { BudgetsService } from '../services/budgets.service';
-import { Budget } from 'src/entities/budgets.entity';
+import { BudgetsService } from './budgets.service';
+import { Budget } from 'src/budgets/budgets.entity';
 import { Response } from 'express';
 import { ApiResponse } from '../models/response.model';
 

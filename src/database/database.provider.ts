@@ -12,7 +12,7 @@ export const databaseProvider = [
         username: Environment.DB_USERNAME,
         password: Environment.DB_PASSWORD,
         database: Environment.DB_NAME,
-        entities: [__dirname + '/../**/entities/**/*.entity{.ts,.js}'],
+        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize: false,
       });
 
