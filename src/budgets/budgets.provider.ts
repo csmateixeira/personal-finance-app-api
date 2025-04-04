@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { Budget } from '../entities/budgets.entity';
+import { Budget } from './budgets.entity';
 
 export const budgetProvider = [
   {
