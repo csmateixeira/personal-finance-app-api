@@ -4,10 +4,12 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { BudgetsModule } from './budgets/budgets.module';
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
   imports: [
     BudgetsModule,
+    TransactionsModule,
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         DB_HOST: Joi.string().required(),
