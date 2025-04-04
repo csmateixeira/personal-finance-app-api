@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "personal-finance-app-api/node_modules",
+    "test", "dist", "**/*spec.ts"]
+}
