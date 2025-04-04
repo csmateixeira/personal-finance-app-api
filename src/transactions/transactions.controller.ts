@@ -24,7 +24,7 @@ export class TransactionsController {
     const transactions: Transaction[] =
       await this.transactionsService.findByCategory(category);
 
-    if (transactions === null || transactions.length === 0) {
+    if (transactions.length === 0) {
       response.status(HttpStatus.NOT_FOUND);
 
       return {
