@@ -18,6 +18,7 @@ import { TransactionsModule } from './transactions/transactions.module';
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
       }),
+      envFilePath: '.env.local',
     }),
   ],
   controllers: [AppController],
