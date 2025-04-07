@@ -14,7 +14,7 @@ export class AuthGuard implements CanActivate {
     const token: string | undefined = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('No token provided');
     }
 
     try {
@@ -28,7 +28,7 @@ export class AuthGuard implements CanActivate {
         subject: process.env.TOKEN_SUBJECT,
       });
     } catch (error) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid token');
     }
 
     return true;
