@@ -6,10 +6,23 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
+import { Reflector } from '@nestjs/core';
+import { IS_PUBLIC_KEY } from '../utils/values';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    if (
+      this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+        context.getHandler(),
+        context.getClass(),
+      ])
+    ) {
+      return true;
+    }
+
     const request: Request = context.switchToHttp().getRequest();
     const token: string | undefined = this.extractTokenFromHeader(request);
 
