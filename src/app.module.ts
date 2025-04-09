@@ -6,11 +6,13 @@ import { BudgetsModule } from './budgets/budgets.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
+import { PotsModule } from './pots/pots.module';
 
 @Module({
   imports: [
     BudgetsModule,
     TransactionsModule,
+    PotsModule,
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         DB_HOST: Joi.string().required(),
