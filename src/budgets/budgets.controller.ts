@@ -19,7 +19,7 @@ export class BudgetsController {
   constructor(private readonly budgetsService: BudgetsService) {}
 
   @Get()
-  async getBudgets(): Promise<ApiResponse<Budget>> {
+  async getBudgets(): Promise<ApiResponse<Budget[]>> {
     return {
       status: HttpStatus.OK,
       data: await this.budgetsService.findAll(),

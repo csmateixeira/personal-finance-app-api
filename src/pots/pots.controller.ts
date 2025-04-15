@@ -19,7 +19,7 @@ export class PotsController {
   constructor(private readonly potsService: PotsService) {}
 
   @Get()
-  async getPots(): Promise<ApiResponse<Pot>> {
+  async getPots(): Promise<ApiResponse<Pot[]>> {
     return {
       status: HttpStatus.OK,
       data: await this.potsService.findAll(),
