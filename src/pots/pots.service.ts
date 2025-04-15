@@ -7,7 +7,7 @@ import { Pot } from './pots.entity';
 export class PotsService {
   constructor(
     @Inject(POTS_REPOSITORY)
-    private potsRepository: Repository<Pot>,
+    private readonly potsRepository: Repository<Pot>,
   ) {}
 
   findAll(): Promise<Pot[]> {
