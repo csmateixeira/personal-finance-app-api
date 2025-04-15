@@ -11,7 +11,7 @@ import { IS_PUBLIC_KEY } from '../utils/values';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(private readonly reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     if (
@@ -41,6 +41,7 @@ export class AuthGuard implements CanActivate {
         subject: process.env.TOKEN_SUBJECT,
       });
     } catch (error) {
+      console.error('Invalid token', error);
       throw new UnauthorizedException('Invalid token');
     }
 

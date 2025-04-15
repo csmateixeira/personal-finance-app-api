@@ -7,7 +7,7 @@ import { Transaction } from './transactions.entity';
 export class TransactionsService {
   constructor(
     @Inject(TRANSACTIONS_REPOSITORY)
-    private transactionsRepository: Repository<Transaction>,
+    private readonly transactionsRepository: Repository<Transaction>,
   ) {}
 
   findAll(): Promise<Transaction[]> {

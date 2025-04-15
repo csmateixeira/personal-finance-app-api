@@ -7,7 +7,7 @@ import { BUDGETS_REPOSITORY } from '../utils/values';
 export class BudgetsService {
   constructor(
     @Inject(BUDGETS_REPOSITORY)
-    private budgetsRepository: Repository<Budget>,
+    private readonly budgetsRepository: Repository<Budget>,
   ) {}
 
   findAll(): Promise<Budget[]> {
