@@ -23,18 +23,55 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Run npm install
+      - name: Install dependencies
         run: npm ci
 
-      - name: Run npm build
+      - name: Build
         run: npm run build --if-present
 
-      - name: Run npm test with coverage
+      - name: Test
+        run: npm test
+
+  codecov:
+      name: Codecov
+
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/checkout@v2
+          with:
+            fetch-depth: 0
+
+        - name: Install dependencies
+          run: npm ci
+
+        - name: Test and coverage
+          run: npm run test:cov
+
+        - name: Upload coverage reports to Codecov
+          uses: codecov/codecov-action@v5
+          with:
+            token: ${{ secrets.CODECOV_TOKEN }}
+            slug: csmateixeira/personal-finance-app-api
+            files: coverage/lcov.info
+
+  sonarqube:
+    name: SonarQube
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test and coverage
         run: npm run test:cov
 
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: csmateixeira/personal-finance-app-api
-          files: coverage/lcov.info
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
