@@ -18,8 +18,8 @@ export class TransactionsController {
 
   @Get(':category')
   async getTransactionsByCategory(
-    @Param('category') category: string,
     @Res({ passthrough: true }) response: Response,
+    @Param('category') category: string,
   ): Promise<ApiResponse<Transaction[]>> {
     const transactions: Transaction[] =
       await this.transactionsService.findByCategory(category);

@@ -17,8 +17,8 @@ describe('BudgetsController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      controllers: [BudgetsController],
       providers: [
-        BudgetsController,
         BudgetsService,
         { provide: BUDGETS_REPOSITORY, useValue: {} },
       ],
