@@ -10,9 +10,9 @@ import {
   Res,
 } from '@nestjs/common';
 import { BudgetsService } from './budgets.service';
-import { Budget } from 'src/budgets/budgets.entity';
 import { Response } from 'express';
 import { ApiResponse } from '../models/response.model';
+import { Budget } from './budgets.entity';
 
 @Controller('budgets')
 export class BudgetsController {
@@ -28,8 +28,8 @@ export class BudgetsController {
 
   @Get(':category')
   async getBudgetByCategory(
-    @Param('category') category: string,
     @Res({ passthrough: true }) response: Response,
+    @Param('category') category: string,
   ): Promise<ApiResponse<Budget>> {
     const budget: Budget | null =
       await this.budgetsService.findByCategory(category);
