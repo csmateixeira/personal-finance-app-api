@@ -9,37 +9,36 @@ import {
   Put,
   Res,
 } from '@nestjs/common';
-import { BudgetsService } from './budgets.service';
-import { Budget } from 'src/budgets/budgets.entity';
 import { Response } from 'express';
 import { ApiResponse } from '../models/response.model';
+import { PotsService } from './pots.service';
+import { Pot } from './pots.entity';
 
-@Controller('budgets')
-export class BudgetsController {
-  constructor(private readonly budgetsService: BudgetsService) {}
+@Controller('pots')
+export class PotsController {
+  constructor(private readonly potsService: PotsService) {}
 
   @Get()
-  async getBudgets(): Promise<ApiResponse<Budget[]>> {
+  async getPots(): Promise<ApiResponse<Pot[]>> {
     return {
       status: HttpStatus.OK,
-      data: await this.budgetsService.findAll(),
+      data: await this.potsService.findAll(),
     };
   }
 
-  @Get(':category')
-  async getBudgetByCategory(
-    @Param('category') category: string,
+  @Get(':name')
+  async getPotByName(
+    @Param('name') name: string,
     @Res({ passthrough: true }) response: Response,
-  ): Promise<ApiResponse<Budget>> {
-    const budget: Budget | null =
-      await this.budgetsService.findByCategory(category);
+  ): Promise<ApiResponse<Pot>> {
+    const pot: Pot | null = await this.potsService.findByName(name);
 
-    if (budget === null) {
+    if (pot === null) {
       response.status(HttpStatus.NOT_FOUND);
 
       return {
         status: HttpStatus.NOT_FOUND,
-        message: 'Budget not found with category: ' + category,
+        message: 'Pot not found with name: ' + name,
       };
     }
 
@@ -47,33 +46,33 @@ export class BudgetsController {
 
     return {
       status: HttpStatus.OK,
-      data: budget,
+      data: pot,
     };
   }
 
   @Post()
-  async createBudget(
+  async createPot(
     @Res({ passthrough: true }) response: Response,
-    @Body() budget: Budget,
-  ): Promise<ApiResponse<Budget>> {
-    const createdBudget: Budget = await this.budgetsService.upsert(budget);
+    @Body() pot: Pot,
+  ): Promise<ApiResponse<Pot>> {
+    const createdPot: Pot = await this.potsService.upsert(pot);
 
     response.status(HttpStatus.CREATED);
 
     return {
       status: HttpStatus.CREATED,
-      data: createdBudget,
+      data: createdPot,
     };
   }
 
   @Put(':id')
-  async updateBudget(
+  async updatePot(
     @Res({ passthrough: true }) response: Response,
-    @Body() budget: Budget,
+    @Body() pot: Pot,
     @Param('id') id: string,
-  ): Promise<ApiResponse<Budget>> {
-    const createdBudget: Budget = await this.budgetsService.upsert({
-      ...budget,
+  ): Promise<ApiResponse<Pot>> {
+    const createdPot: Pot = await this.potsService.upsert({
+      ...pot,
       id,
     });
 
@@ -81,27 +80,27 @@ export class BudgetsController {
 
     return {
       status: HttpStatus.ACCEPTED,
-      data: createdBudget,
+      data: createdPot,
     };
   }
 
   @Delete(':id')
-  async deleteBudget(
+  async deletePot(
     @Res({ passthrough: true }) response: Response,
     @Param('id') id: string,
   ): Promise<ApiResponse<boolean>> {
-    const budget: Budget | null = await this.budgetsService.findById(id);
+    const pot: Pot | null = await this.potsService.findById(id);
 
-    if (budget === null) {
+    if (pot === null) {
       response.status(HttpStatus.NOT_FOUND);
 
       return {
         status: HttpStatus.NOT_FOUND,
-        message: 'Budget not found with id: ' + id,
+        message: 'Pot not found with id: ' + id,
       };
     }
 
-    await this.budgetsService.remove(id);
+    await this.potsService.remove(id);
 
     response.status(HttpStatus.ACCEPTED);
 

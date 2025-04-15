@@ -3,6 +3,6 @@ import { HttpStatus } from '@nestjs/common';
 export interface ApiResponse<T> {
   status: HttpStatus;
 
-  data?: T | T[];
+  data?: T;
   message?: string;
 }

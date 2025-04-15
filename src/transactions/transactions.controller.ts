@@ -9,7 +9,7 @@ export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
   @Get()
-  async getTransactions(): Promise<ApiResponse<Transaction>> {
+  async getTransactions(): Promise<ApiResponse<Transaction[]>> {
     return {
       status: HttpStatus.OK,
       data: await this.transactionsService.findAll(),
@@ -20,7 +20,7 @@ export class TransactionsController {
   async getTransactionsByCategory(
     @Param('category') category: string,
     @Res({ passthrough: true }) response: Response,
-  ): Promise<ApiResponse<Transaction>> {
+  ): Promise<ApiResponse<Transaction[]>> {
     const transactions: Transaction[] =
       await this.transactionsService.findByCategory(category);
 
