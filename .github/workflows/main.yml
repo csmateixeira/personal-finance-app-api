@@ -32,9 +32,46 @@ jobs:
       - name: Run npm test with coverage
         run: npm run test:cov
 
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
+  codecov:
+      name: Codecov
+
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/checkout@v2
+          with:
+            fetch-depth: 0
+
+        - name: Install dependencies
+          run: npm ci
+
+        - name: Test and coverage
+          run: npm run test:cov
+
+        - name: Upload coverage reports to Codecov
+          uses: codecov/codecov-action@v5
+          with:
+            token: ${{ secrets.CODECOV_TOKEN }}
+            slug: csmateixeira/personal-finance-app-api
+            files: coverage/lcov.info
+
+  sonarqube:
+    name: SonarQube
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: csmateixeira/personal-finance-app-api
-          files: coverage/lcov.info
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test and coverage
+        run: npm run test:cov
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
