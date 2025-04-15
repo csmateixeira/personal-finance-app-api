@@ -1,4 +1,14 @@
-import { Controller, Get, HttpStatus, Param, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  Res,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { ApiResponse } from '../models/response.model';
 import { PotsService } from './pots.service';
@@ -37,6 +47,66 @@ export class PotsController {
     return {
       status: HttpStatus.OK,
       data: pot,
+    };
+  }
+
+  @Post()
+  async createPot(
+    @Res({ passthrough: true }) response: Response,
+    @Body() pot: Pot,
+  ): Promise<ApiResponse<Pot>> {
+    const createdPot: Pot = await this.potsService.upsert(pot);
+
+    response.status(HttpStatus.CREATED);
+
+    return {
+      status: HttpStatus.CREATED,
+      data: createdPot,
+    };
+  }
+
+  @Put(':id')
+  async updatePot(
+    @Res({ passthrough: true }) response: Response,
+    @Body() pot: Pot,
+    @Param('id') id: string,
+  ): Promise<ApiResponse<Pot>> {
+    const createdPot: Pot = await this.potsService.upsert({
+      ...pot,
+      id,
+    });
+
+    response.status(HttpStatus.ACCEPTED);
+
+    return {
+      status: HttpStatus.ACCEPTED,
+      data: createdPot,
+    };
+  }
+
+  @Delete(':id')
+  async deletePot(
+    @Res({ passthrough: true }) response: Response,
+    @Param('id') id: string,
+  ): Promise<ApiResponse<boolean>> {
+    const pot: Pot | null = await this.potsService.findById(id);
+
+    if (pot === null) {
+      response.status(HttpStatus.NOT_FOUND);
+
+      return {
+        status: HttpStatus.NOT_FOUND,
+        message: 'Pot not found with id: ' + id,
+      };
+    }
+
+    await this.potsService.remove(id);
+
+    response.status(HttpStatus.ACCEPTED);
+
+    return {
+      status: HttpStatus.ACCEPTED,
+      data: true,
     };
   }
 }
