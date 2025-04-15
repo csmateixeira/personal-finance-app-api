@@ -23,14 +23,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Run npm install
+      - name: Install dependencies
         run: npm ci
 
-      - name: Run npm build
+      - name: Build
         run: npm run build --if-present
 
-      - name: Run npm test with coverage
-        run: npm run test:cov
+      - name: Test
+        run: npm test
 
   codecov:
       name: Codecov
