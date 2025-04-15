@@ -1,5 +1,7 @@
-[![codecov](https://codecov.io/gh/csmateixeira/personal-finance-app-api/graph/badge.svg?token=O1NAEJFNRV)](https://codecov.io/gh/csmateixeira/personal-finance-app-api)
 ![github](https://github.com/csmateixeira/personal-finance-app-api/actions/workflows/main.yml/badge.svg)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=csmateixeira_personal-finance-app-api&metric=coverage)](https://sonarcloud.io/summary/new_code?id=csmateixeira_personal-finance-app-api)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=csmateixeira_personal-finance-app-api&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=csmateixeira_personal-finance-app-api)
+
 
 
 ## Description
