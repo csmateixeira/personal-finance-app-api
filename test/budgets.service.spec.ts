@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Repository, DeleteResult } from 'typeorm';
 import { BudgetsService } from '../src/budgets/budgets.service';
 import { Budget } from '../src/budgets/budgets.entity';
-import { budget, mockDeleteResult } from './test-data';
+import { budget, deleteResult } from './test-data';
 import { BUDGETS_REPOSITORY } from '../src/utils/values';
 
 describe('BudgetsService', () => {
@@ -101,11 +101,11 @@ describe('BudgetsService', () => {
 
   describe('remove', () => {
     it('should delete a budget by id and return the result', async () => {
-      jest.spyOn(repository, 'delete').mockResolvedValue(mockDeleteResult);
+      jest.spyOn(repository, 'delete').mockResolvedValue(deleteResult);
 
       const result: DeleteResult = await service.remove('1');
 
-      expect(result).toEqual(mockDeleteResult);
+      expect(result).toEqual(deleteResult);
       expect(repository.delete).toHaveBeenCalledWith('1');
     });
   });
