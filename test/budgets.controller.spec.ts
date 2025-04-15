@@ -6,6 +6,7 @@ import { budget } from './test-data';
 import { ApiResponse } from '../src/models/response.model';
 import { HttpStatus } from '@nestjs/common';
 import { BUDGETS_REPOSITORY } from '../src/utils/values';
+import { DeleteResult } from 'typeorm';
 
 describe('BudgetsController', () => {
   let controller: BudgetsController;
@@ -13,24 +14,6 @@ describe('BudgetsController', () => {
 
   const mockBudgets: Budget[] = [budget];
   const mockResponse: any = { status: jest.fn() };
-
-  // const mockBudgetsService = {
-  //   findAll: jest.fn().mockResolvedValue(mockBudgets),
-  //   findByCategory: jest
-  //     .fn()
-  //     .mockImplementation((category: string) =>
-  //       category === 'Food'
-  //         ? Promise.resolve(budget)
-  //         : Promise.resolve(null),
-  //     ),
-  //   upsert: jest.fn().mockResolvedValue(budget),
-  //   findById: jest
-  //     .fn()
-  //     .mockImplementation((id: string) =>
-  //       id === '1' ? Promise.resolve(budget) : Promise.resolve(null),
-  //     ),
-  //   remove: jest.fn().mockResolvedValue({ affected: 1 }),
-  // };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -47,10 +30,6 @@ describe('BudgetsController', () => {
 
   afterEach(() => {
     jest.resetAllMocks();
-  });
-
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
   });
 
   describe('getBudgets', () => {
@@ -123,45 +102,64 @@ describe('BudgetsController', () => {
     });
   });
 
-  // describe('updateBudget', () => {
-  //   it('should update an existing budget', async () => {
-  //     const mockResponse = { status: jest.fn() };
-  //     const result = await controller.updateBudget(
-  //       mockResponse as any,
-  //       budget,
-  //       '1',
-  //     );
-  //     expect(result).toEqual({
-  //       status: HttpStatus.ACCEPTED,
-  //       data: budget,
-  //     });
-  //     expect(service.upsert).toHaveBeenCalledWith({ ...budget, id: '1' });
-  //     expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.ACCEPTED);
-  //   });
-  // });
-  //
-  // describe('deleteBudget', () => {
-  //   it('should delete a budget by id', async () => {
-  //     const mockResponse = { status: jest.fn() };
-  //     const result = await controller.deleteBudget(mockResponse as any, '1');
-  //     expect(result).toEqual({
-  //       status: HttpStatus.ACCEPTED,
-  //       data: true,
-  //     });
-  //     expect(service.findById).toHaveBeenCalledWith('1');
-  //     expect(service.remove).toHaveBeenCalledWith('1');
-  //     expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.ACCEPTED);
-  //   });
-  //
-  //   it('should return NOT_FOUND if budget does not exist', async () => {
-  //     const mockResponse = { status: jest.fn() };
-  //     const result = await controller.deleteBudget(mockResponse as any, '2');
-  //     expect(result).toEqual({
-  //       status: HttpStatus.NOT_FOUND,
-  //       message: 'Budget not found with id: 2',
-  //     });
-  //     expect(service.findById).toHaveBeenCalledWith('2');
-  //     expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.NOT_FOUND);
-  //   });
-  // });
+  describe('updateBudget', () => {
+    it('should update an existing budget', async () => {
+      jest.spyOn(service, 'upsert').mockResolvedValue(budget);
+
+      const result: ApiResponse<Budget> = await controller.updateBudget(
+        mockResponse,
+        budget,
+        '1',
+      );
+
+      expect(result).toEqual({
+        status: HttpStatus.ACCEPTED,
+        data: budget,
+      });
+
+      expect(service.upsert).toHaveBeenCalledWith({ ...budget, id: '1' });
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.ACCEPTED);
+    });
+  });
+
+  describe('deleteBudget', () => {
+    it('should delete a budget by id', async () => {
+      jest.spyOn(service, 'findById').mockResolvedValue(budget);
+      jest
+        .spyOn(service, 'remove')
+        .mockResolvedValue({ affected: 1 } as DeleteResult);
+
+      const result: ApiResponse<boolean> = await controller.deleteBudget(
+        mockResponse,
+        '1',
+      );
+
+      expect(result).toEqual({
+        status: HttpStatus.ACCEPTED,
+        data: true,
+      });
+
+      expect(service.findById).toHaveBeenCalledWith('1');
+      expect(service.remove).toHaveBeenCalledWith('1');
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.ACCEPTED);
+    });
+
+    it('should return NOT_FOUND if budget does not exist', async () => {
+      jest.spyOn(service, 'findById').mockResolvedValue(null);
+      jest
+        .spyOn(service, 'remove')
+        .mockResolvedValue({ affected: 0 } as DeleteResult);
+
+      const result = await controller.deleteBudget(mockResponse, '2');
+
+      expect(result).toEqual({
+        status: HttpStatus.NOT_FOUND,
+        message: 'Budget not found with id: 2',
+      });
+
+      expect(service.findById).toHaveBeenCalledWith('2');
+      expect(service.remove).not.toHaveBeenCalled();
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.NOT_FOUND);
+    });
+  });
 });
