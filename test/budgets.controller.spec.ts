@@ -3,7 +3,6 @@ import { BudgetsController } from '../src/budgets/budgets.controller';
 import { BudgetsService } from '../src/budgets/budgets.service';
 import { Budget } from '../src/budgets/budgets.entity';
 import { budget } from './test-data';
-import { AppModule } from '../src/app.module';
 import { ApiResponse } from '../src/models/response.model';
 import { HttpStatus } from '@nestjs/common';
 import { BUDGETS_REPOSITORY } from '../src/utils/values';
@@ -35,8 +34,8 @@ describe('BudgetsController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
       providers: [
+        BudgetsController,
         BudgetsService,
         { provide: BUDGETS_REPOSITORY, useValue: {} },
       ],
@@ -69,60 +68,60 @@ describe('BudgetsController', () => {
     });
   });
 
-  // describe('getBudgetByCategory', () => {
-  //   it('should return a budget by category', async () => {
-  //     jest.spyOn(service, 'findByCategory').mockResolvedValue(budget);
-  //
-  //     const result: ApiResponse<Budget> = await controller.getBudgetByCategory(
-  //       mockResponse,
-  //       'Food',
-  //     );
-  //
-  //     expect(result).toEqual({
-  //       status: HttpStatus.OK,
-  //       data: budget,
-  //     });
-  //
-  //     expect(service.findByCategory).toHaveBeenCalledWith('Food');
-  //     expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.OK);
-  //   });
-  //
-  //   it('should return NOT_FOUND if no budget is found', async () => {
-  //     jest.spyOn(service, 'findByCategory').mockResolvedValue(null);
-  //
-  //     const result = await controller.getBudgetByCategory(
-  //       mockResponse,
-  //       'Nonexistent',
-  //     );
-  //
-  //     expect(result).toEqual({
-  //       status: HttpStatus.NOT_FOUND,
-  //       message: 'Budget not found with category: Nonexistent',
-  //     });
-  //
-  //     expect(service.findByCategory).toHaveBeenCalledWith('Nonexistent');
-  //     expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.NOT_FOUND);
-  //   });
-  // });
-  //
-  // describe('createBudget', () => {
-  //   it('should create a new budget', async () => {
-  //     jest.spyOn(service, 'upsert').mockResolvedValue(budget);
-  //
-  //     const result: ApiResponse<Budget> = await controller.createBudget(
-  //       mockResponse,
-  //       budget,
-  //     );
-  //
-  //     expect(result).toEqual({
-  //       status: HttpStatus.CREATED,
-  //       data: budget,
-  //     });
-  //
-  //     expect(service.upsert).toHaveBeenCalledWith(budget);
-  //     expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.CREATED);
-  //   });
-  // });
+  describe('getBudgetByCategory', () => {
+    it('should return a budget by category', async () => {
+      jest.spyOn(service, 'findByCategory').mockResolvedValue(budget);
+
+      const result: ApiResponse<Budget> = await controller.getBudgetByCategory(
+        mockResponse,
+        'Food',
+      );
+
+      expect(result).toEqual({
+        status: HttpStatus.OK,
+        data: budget,
+      });
+
+      expect(service.findByCategory).toHaveBeenCalledWith('Food');
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.OK);
+    });
+
+    it('should return NOT_FOUND if no budget is found', async () => {
+      jest.spyOn(service, 'findByCategory').mockResolvedValue(null);
+
+      const result = await controller.getBudgetByCategory(
+        mockResponse,
+        'Nonexistent',
+      );
+
+      expect(result).toEqual({
+        status: HttpStatus.NOT_FOUND,
+        message: 'Budget not found with category: Nonexistent',
+      });
+
+      expect(service.findByCategory).toHaveBeenCalledWith('Nonexistent');
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.NOT_FOUND);
+    });
+  });
+
+  describe('createBudget', () => {
+    it('should create a new budget', async () => {
+      jest.spyOn(service, 'upsert').mockResolvedValue(budget);
+
+      const result: ApiResponse<Budget> = await controller.createBudget(
+        mockResponse,
+        budget,
+      );
+
+      expect(result).toEqual({
+        status: HttpStatus.CREATED,
+        data: budget,
+      });
+
+      expect(service.upsert).toHaveBeenCalledWith(budget);
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.CREATED);
+    });
+  });
 
   // describe('updateBudget', () => {
   //   it('should update an existing budget', async () => {
